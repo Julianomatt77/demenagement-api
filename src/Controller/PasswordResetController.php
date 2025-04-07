@@ -14,6 +14,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/password')]
@@ -44,13 +45,13 @@ class PasswordResetController extends AbstractController
         // Générer un token unique et une expiration (exemple avec UUID)
         $token = Uuid::v4()->toRfc4122();
         $user->setToken($token);
-        $expiryDate = new \DateTime('+1 hour');
+        $expiryDate = new \DateTime('+3 hour');
         $user->setTokenExpiryDate(new \DateTimeImmutable($expiryDate->format('Y-m-d H:i:s')));
         $em->persist($user);
         $em->flush();
 
         // Envoyer un email à l'utilisateur avec un lien de réinitialisation
-        $resetLink = $this->generateUrl('password_reset', ['token' => $token], true);
+        $resetLink = $this->generateUrl('password_reset', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
         $to = $user->getEmail();
         $subject = 'Réinitialisation de votre mot de passe';
         $message = "Cliquez sur ce lien pour réinitialiser votre mot de passe : <a href=\"$resetLink\">$resetLink</a>";

@@ -6,14 +6,12 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\AnnuaireService;
 use Doctrine\ORM\EntityManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
@@ -111,7 +109,6 @@ class UserController extends AbstractController
         $connectedUser->setDeletedAt(new \DateTimeImmutable());
         $this->em->persist($connectedUser);
         $this->em->flush();
-//        $json = $serializer->serialize($connectedUser, 'json', ['groups' => 'user:read']);
 
         return new JsonResponse([
             "status"  => true,

@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model\Operation;
 use App\Controller\PasswordResetController;
 use App\Controller\UserController;
 use App\Repository\UserRepository;
@@ -19,11 +20,46 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
 #[ApiResource(
     operations: [
-        new Get(uriTemplate: '/api/users-infos', controller: UserController::class, denormalizationContext: ['groups' => ['user:read']], name: 'app_user_show'),
-        new Post(uriTemplate: '/api/register', controller: UserController::class, denormalizationContext: ['groups' => ['user:write']], name: 'api_register'),
-        new Delete(uriTemplate: '/api/user-delete', controller: UserController::class, denormalizationContext: ['groups' => ['user:write']], name: 'app_user_delete'),
-        new Post(uriTemplate: '/api/password/forgot', controller: PasswordResetController::class, denormalizationContext: ['groups' => ['email:write']], name: 'password_forgot'),
-        new Patch(uriTemplate: '/api/password/reset/{token}', controller: PasswordResetController::class, denormalizationContext: ['groups' => ['password:write']], name: 'password_reset'),
+        new Get(
+            uriTemplate: '/api/users-infos',
+            controller: UserController::class,
+            openapi: new Operation(
+                summary: 'Get user informations',
+                description: 'Get user informations.'),
+            denormalizationContext: ['groups' => ['user:read']],
+            name: 'app_user_show'),
+        new Post(
+            uriTemplate: '/api/register',
+            controller: UserController::class,
+            openapi: new Operation(
+                summary: 'User registration',
+                description: 'Create an user account.'),
+            denormalizationContext: ['groups' => ['user:write']],
+            name: 'api_register'),
+        new Delete(
+            uriTemplate: '/api/user-delete',
+            controller: UserController::class,
+            openapi: new Operation(
+                summary: 'Delete an user account',
+                description: 'Delete an user account.'),
+            denormalizationContext: ['groups' => ['user:write']],
+            name: 'app_user_delete'),
+        new Post(
+            uriTemplate: '/api/password/forgot',
+            controller: PasswordResetController::class,
+            openapi: new Operation(
+                summary: 'Send an email to reset the password',
+                description: 'Send an email to reset the password.'),
+            denormalizationContext: ['groups' => ['email:write']],
+            name: 'password_forgot'),
+        new Patch(
+            uriTemplate: '/api/password/reset/{token}',
+            controller: PasswordResetController::class,
+            openapi: new Operation(
+                summary: 'Reset the user password with a token',
+                description: 'Reset the user password with a token.'),
+            denormalizationContext: ['groups' => ['password:write']],
+            name: 'password_reset'),
     ],
     formats: ["json"],
 )]
