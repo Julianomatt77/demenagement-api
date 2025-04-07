@@ -35,7 +35,7 @@ class UserController extends AbstractController
     )]
     public function register(Request $request, SerializerInterface $serializer): JsonResponse
     {
-        $data     = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true);
         $isRequestValid = $this->annuaire->validateRegistrationInfos($data);
         if (!$isRequestValid) {
             return new JsonResponse([

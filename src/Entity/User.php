@@ -11,6 +11,8 @@ use ApiPlatform\OpenApi\Model\Operation;
 use App\Controller\PasswordResetController;
 use App\Controller\UserController;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -68,7 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'demenageur:read', 'carton:read', 'element:read', 'piece:read', 'changement_adresse:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
@@ -107,6 +109,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $tokenExpiryDate = null;
+
+    /**
+     * @var Collection<int, Demenageur>
+     */
+    #[ORM\OneToMany(targetEntity: Demenageur::class, mappedBy: 'user')]
+    private Collection $demenageurs;
+
+    public function __construct()
+    {
+        $this->demenageurs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -261,6 +274,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTokenExpiryDate(?\DateTimeImmutable $tokenExpiryDate): void
     {
         $this->tokenExpiryDate = $tokenExpiryDate;
+    }
+
+    /**
+     * @return Collection<int, Demenageur>
+     */
+    public function getDemenageurs(): Collection
+    {
+        return $this->demenageurs;
+    }
+
+    public function addDemenageur(Demenageur $demenageur): static
+    {
+        if (!$this->demenageurs->contains($demenageur)) {
+            $this->demenageurs->add($demenageur);
+            $demenageur->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemenageur(Demenageur $demenageur): static
+    {
+        if ($this->demenageurs->removeElement($demenageur)) {
+            // set the owning side to null (unless already changed)
+            if ($demenageur->getUser() === $this) {
+                $demenageur->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
 
