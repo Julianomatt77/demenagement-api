@@ -155,6 +155,16 @@ class Carton
      */
     public function getElements(): Collection
     {
+        return $this->elements->filter(function(Element $element) {
+            return $element->getDeletedAt() === null;
+        });
+    }
+
+    /**
+     * @return Collection<int, Element>
+     */
+    public function getAllElements(): Collection
+    {
         return $this->elements;
     }
 

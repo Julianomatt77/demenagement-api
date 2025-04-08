@@ -122,6 +122,16 @@ class Room
      */
     public function getCartons(): Collection
     {
+        return $this->cartons->filter(function(Carton $carton) {
+            return $carton->getDeletedAt() === null;
+        });
+    }
+
+    /**
+     * @return Collection<int, Carton>
+     */
+    public function getAllCartons(): Collection
+    {
         return $this->cartons;
     }
 
