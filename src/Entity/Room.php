@@ -32,11 +32,11 @@ class Room
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['room:read', 'user:read', 'carton:read'])]
+    #[Groups(['room:read', 'user:read', 'carton:read', 'element:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['room:read', 'room:write', 'user:read', 'carton:read'])]
+    #[Groups(['room:read', 'room:write', 'user:read', 'carton:read', 'element:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]

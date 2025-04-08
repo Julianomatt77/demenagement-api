@@ -128,11 +128,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Carton::class, mappedBy: 'user')]
     private Collection $cartons;
 
+    /**
+     * @var Collection<int, Element>
+     */
+    #[ORM\OneToMany(targetEntity: Element::class, mappedBy: 'user')]
+    private Collection $elements;
+
     public function __construct()
     {
         $this->demenageurs = new ArrayCollection();
         $this->rooms = new ArrayCollection();
         $this->cartons = new ArrayCollection();
+        $this->elements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -374,6 +381,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($carton->getUser() === $this) {
                 $carton->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Element>
+     */
+    public function getElements(): Collection
+    {
+        return $this->elements;
+    }
+
+    public function addElement(Element $element): static
+    {
+        if (!$this->elements->contains($element)) {
+            $this->elements->add($element);
+            $element->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElement(Element $element): static
+    {
+        if ($this->elements->removeElement($element)) {
+            // set the owning side to null (unless already changed)
+            if ($element->getUser() === $this) {
+                $element->setUser(null);
             }
         }
 

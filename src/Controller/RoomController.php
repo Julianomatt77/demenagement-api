@@ -124,6 +124,6 @@ final class RoomController extends AbstractController
         $this->em->persist($object);
         $this->em->flush();
 
-        return new JsonResponse('Pièce supprimée !', Response::HTTP_ACCEPTED, [], true);
+        return new JsonResponse('Pièce supprimée !', Response::HTTP_ACCEPTED);
     }
 }

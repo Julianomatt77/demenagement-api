@@ -71,4 +71,15 @@ class DataService
 
         return $nextNumber;
     }
+
+    public function checkValidInAndOutBox(array $data): bool
+    {
+        if (isset($data['in_box']) && $data['in_box'] === true) {
+            if (isset($data['out_box']) && $data['out_box'] === true) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

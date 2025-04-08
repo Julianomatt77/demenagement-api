@@ -43,7 +43,6 @@ final class CartonController extends AbstractController
         $this->dataService = $dataService;
     }
 
-
     #[Route(name: 'get_all_cartons', defaults: ['_api_resource_class' => Carton::class],methods: ['GET'])]
     public function index(Request $request): Response
     {
@@ -101,6 +100,7 @@ final class CartonController extends AbstractController
     {
         $user = $this->annuaire->getUser($request);
         $object = $this->cartonRepository->findOneBy(['id' => $object->getId(), 'user'=>$user, 'deleted_at' => null]);
+//        $object = $this->cartonRepository->findOneBy(['numero' => $object->getNumero(), 'user'=>$user, 'deleted_at' => null]);
 
         if (!$object) {
             return new JsonResponse(['error' => 'Carton introuvable'], Response::HTTP_NOT_FOUND);
@@ -178,6 +178,6 @@ final class CartonController extends AbstractController
         $this->em->persist($object);
         $this->em->flush();
 
-        return new JsonResponse('Carton supprimée !', Response::HTTP_ACCEPTED, [], true);
+        return new JsonResponse('Carton supprimée !', Response::HTTP_ACCEPTED);
     }
 }

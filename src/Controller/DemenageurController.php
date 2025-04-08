@@ -126,6 +126,6 @@ final class DemenageurController extends AbstractController
         $this->em->persist($demenageur);
         $this->em->flush();
 
-        return new JsonResponse('Déménageur supprimée !', Response::HTTP_ACCEPTED, [], true);
+        return new JsonResponse('Déménageur supprimée !', Response::HTTP_ACCEPTED);
     }
 }
