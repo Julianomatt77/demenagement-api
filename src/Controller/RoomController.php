@@ -3,10 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Room;
-use App\Form\RoomType;
 use App\Repository\RoomRepository;
 use App\Service\AnnuaireService;
-use App\Service\DataService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

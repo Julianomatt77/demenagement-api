@@ -10,6 +10,8 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Controller\RoomController;
 use App\Repository\RoomRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -30,15 +32,15 @@ class Room
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['room:read', 'user:read'])]
+    #[Groups(['room:read', 'user:read', 'carton:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['room:read', 'room:write', 'user:read'])]
+    #[Groups(['room:read', 'room:write', 'user:read', 'carton:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['room:read', 'room:write', 'user:read'])]
+    #[Groups(['room:read', 'room:write', 'user:read', 'carton:read'])]
     private ?string $color = null;
 
     #[ORM\ManyToOne(inversedBy: 'rooms')]
@@ -49,6 +51,18 @@ class Room
     #[ORM\Column(nullable: true)]
     #[Groups(['room:read'])]
     private ?\DateTimeImmutable $deleted_at = null;
+
+    /**
+     * @var Collection<int, Carton>
+     */
+    #[ORM\OneToMany(targetEntity: Carton::class, mappedBy: 'room')]
+    #[Groups(['room:read'])]
+    private Collection $cartons;
+
+    public function __construct()
+    {
+        $this->cartons = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -99,6 +113,36 @@ class Room
     public function setDeletedAt(?\DateTimeImmutable $deleted_at): static
     {
         $this->deleted_at = $deleted_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Carton>
+     */
+    public function getCartons(): Collection
+    {
+        return $this->cartons;
+    }
+
+    public function addCarton(Carton $carton): static
+    {
+        if (!$this->cartons->contains($carton)) {
+            $this->cartons->add($carton);
+            $carton->setRoom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCarton(Carton $carton): static
+    {
+        if ($this->cartons->removeElement($carton)) {
+            // set the owning side to null (unless already changed)
+            if ($carton->getRoom() === $this) {
+                $carton->setRoom(null);
+            }
+        }
 
         return $this;
     }
