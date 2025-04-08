@@ -16,6 +16,19 @@ class CartonRepository extends ServiceEntityRepository
         parent::__construct($registry, Carton::class);
     }
 
+    public function findByUserGroupedByRoom($user)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.room', 'r')
+            ->where('c.user = :user')
+            ->andWhere('c.deleted_at IS NULL')
+            ->orderBy('r.name', 'ASC')
+            ->addOrderBy('c.numero', 'ASC')
+            ->setParameter('user', $user);
+
+        return $qb->getQuery()->getResult();
+    }
+
     //    /**
     //     * @return Carton[] Returns an array of Carton objects
     //     */

@@ -53,7 +53,7 @@ class Carton
     private ?Room $room = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['carton:read', 'room:read', 'element:read'])]
+    #[Groups(['carton:read'])]
     private ?\DateTimeImmutable $deleted_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'cartons')]

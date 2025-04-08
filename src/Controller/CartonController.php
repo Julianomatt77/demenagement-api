@@ -47,7 +47,8 @@ final class CartonController extends AbstractController
     public function index(Request $request): Response
     {
         $user = $this->annuaire->getUser($request);
-        $objects = $this->cartonRepository->findBy(['user' => $user, 'deleted_at' => null], ['numero' => 'asc']);
+//        $objects = $this->cartonRepository->findBy(['user' => $user, 'deleted_at' => null], ['numero' => 'asc']);
+        $objects = $this->cartonRepository->findByUserGroupedByRoom($user);
 
         $json = $this->serializer->serialize($objects, 'json', ['groups' => 'carton:read']);
 

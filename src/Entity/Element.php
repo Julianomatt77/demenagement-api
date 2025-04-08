@@ -47,7 +47,7 @@ class Element
 
     #[ORM\ManyToOne(inversedBy: 'elements')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['carton:read', 'room:read', 'element:read', 'element:write'])]
+    #[Groups(['element:read', 'element:write'])]
     private ?Carton $carton = null;
 
     #[ORM\ManyToOne(inversedBy: 'elements')]
@@ -56,7 +56,7 @@ class Element
     private ?User $user = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['carton:read', 'room:read', 'element:read'])]
+    #[Groups(['element:read'])]
     private ?\DateTimeImmutable $deleted_at = null;
 
     public function getId(): ?int

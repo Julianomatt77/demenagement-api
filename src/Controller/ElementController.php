@@ -140,12 +140,12 @@ final class ElementController extends AbstractController
                 $object->setCarton($carton);
             }
 
-            if ($content['in_box']) {
+            if (isset($content['in_box']) && $content['in_box']) {
                 $object->setInBox(true);
                 $object->setOutBox(false);
             }
 
-            if ($content['out_box']) {
+            if (isset($content['out_box']) && $content['out_box']) {
                 $object->setInBox(false);
                 $object->setOutBox(true);
             }
