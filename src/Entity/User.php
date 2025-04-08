@@ -134,12 +134,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Element::class, mappedBy: 'user')]
     private Collection $elements;
 
+    /**
+     * @var Collection<int, Administratif>
+     */
+    #[ORM\OneToMany(targetEntity: Administratif::class, mappedBy: 'user')]
+    private Collection $administratifs;
+
     public function __construct()
     {
         $this->demenageurs = new ArrayCollection();
         $this->rooms = new ArrayCollection();
         $this->cartons = new ArrayCollection();
         $this->elements = new ArrayCollection();
+        $this->administratifs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -411,6 +418,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($element->getUser() === $this) {
                 $element->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Administratif>
+     */
+    public function getAdministratifs(): Collection
+    {
+        return $this->administratifs;
+    }
+
+    public function addAdministratif(Administratif $administratif): static
+    {
+        if (!$this->administratifs->contains($administratif)) {
+            $this->administratifs->add($administratif);
+            $administratif->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdministratif(Administratif $administratif): static
+    {
+        if ($this->administratifs->removeElement($administratif)) {
+            // set the owning side to null (unless already changed)
+            if ($administratif->getUser() === $this) {
+                $administratif->setUser(null);
             }
         }
 

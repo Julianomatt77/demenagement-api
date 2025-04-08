@@ -100,7 +100,6 @@ final class CartonController extends AbstractController
     {
         $user = $this->annuaire->getUser($request);
         $object = $this->cartonRepository->findOneBy(['id' => $object->getId(), 'user'=>$user, 'deleted_at' => null]);
-//        $object = $this->cartonRepository->findOneBy(['numero' => $object->getNumero(), 'user'=>$user, 'deleted_at' => null]);
 
         if (!$object) {
             return new JsonResponse(['error' => 'Carton introuvable'], Response::HTTP_NOT_FOUND);
