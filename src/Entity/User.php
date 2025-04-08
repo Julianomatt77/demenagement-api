@@ -70,7 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read', 'demenageur:read', 'carton:read', 'element:read', 'piece:read', 'changement_adresse:read'])]
+    #[Groups(['user:read', 'demenageur:read', 'carton:read', 'element:read', 'room:read', 'administratif:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
@@ -116,9 +116,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Demenageur::class, mappedBy: 'user')]
     private Collection $demenageurs;
 
+    /**
+     * @var Collection<int, Room>
+     */
+    #[ORM\OneToMany(targetEntity: Room::class, mappedBy: 'user')]
+    private Collection $rooms;
+
     public function __construct()
     {
         $this->demenageurs = new ArrayCollection();
+        $this->rooms = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -300,6 +307,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($demenageur->getUser() === $this) {
                 $demenageur->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Room>
+     */
+    public function getRooms(): Collection
+    {
+        return $this->rooms;
+    }
+
+    public function addRoom(Room $room): static
+    {
+        if (!$this->rooms->contains($room)) {
+            $this->rooms->add($room);
+            $room->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoom(Room $room): static
+    {
+        if ($this->rooms->removeElement($room)) {
+            // set the owning side to null (unless already changed)
+            if ($room->getUser() === $this) {
+                $room->setUser(null);
             }
         }
 

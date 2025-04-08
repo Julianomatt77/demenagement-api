@@ -19,16 +19,14 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/api/demenageurs')]
 final class DemenageurController extends AbstractController
 {
-    private UserRepository $userRepository;
     private AnnuaireService $annuaire;
     private DataService $dataService;
     private SerializerInterface $serializer;
     private EntityManagerInterface $em;
     private DemenageurRepository $demenageurRepository;
 
-    public function __construct(UserRepository $userRepository, AnnuaireService $annuaire, DataService $dataService, SerializerInterface $serializer, EntityManagerInterface $em, DemenageurRepository $demenageurRepository)
+    public function __construct(AnnuaireService $annuaire, DataService $dataService, SerializerInterface $serializer, EntityManagerInterface $em, DemenageurRepository $demenageurRepository)
     {
-        $this->userRepository = $userRepository;
         $this->annuaire = $annuaire;
         $this->dataService = $dataService;
         $this->serializer = $serializer;
@@ -107,7 +105,6 @@ final class DemenageurController extends AbstractController
         $this->em->flush();
 
         return new JsonResponse($this->serializer->serialize($demenageur, 'json', ['groups' => 'demenageur:read']), Response::HTTP_OK, [], true);
-
     }
 
     #[Route(path: '/{id}', name: 'delete_demenageur', defaults: ['_api_resource_class' => Demenageur::class],methods: ['DELETE'])]

@@ -35,7 +35,7 @@ class Demenageur
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['demenageur:read', 'demenageur:write'])]
+    #[Groups(['demenageur:read', 'demenageur:write', 'user:read'])]
     private ?string $name = null;
 
     #[Groups(['demenageur:read', 'demenageur:write'])]
