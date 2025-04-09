@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: DemenageurRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(uriTemplate: '/api/demenageurs', name: 'get_all_demenageurs'),
+        new GetCollection(uriTemplate: '/api/demenageurs', paginationEnabled: false, name: 'get_all_demenageurs'),
         new Post(uriTemplate: '/api/demenageurs', denormalizationContext: ['groups' => ['demenageur:write']], name: 'add_demenageur'),
         new get(uriTemplate: '/api/demenageurs/{id}', denormalizationContext: ['groups' => ['demenageur:read']], name: 'get_demenageur'),
         new Patch(uriTemplate: '/api/demenageurs/{id}', denormalizationContext: ['groups' => ['demenageur:write']], name: 'edit_demenageur'),

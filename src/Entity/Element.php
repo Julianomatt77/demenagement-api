@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ElementRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(uriTemplate: '/api/elements', name: 'get_all_elements'),
+        new GetCollection(uriTemplate: '/api/elements', paginationEnabled: false, name: 'get_all_elements'),
         new Post(uriTemplate: '/api/elements', denormalizationContext: ['groups' => ['element:write']], name: 'add_element'),
         new get(uriTemplate: '/api/elements/{id}', denormalizationContext: ['groups' => ['element:read']], name: 'get_element'),
         new Patch(uriTemplate: '/api/elements/{id}', denormalizationContext: ['groups' => ['element:write']], name: 'edit_element'),

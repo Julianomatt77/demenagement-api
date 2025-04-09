@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use OpenApi\Attributes as OA;
+use Nelmio\ApiDocBundle\Attribute\Model;
 
 #[Route('/api/cartons')]
 final class CartonController extends AbstractController
@@ -47,8 +49,9 @@ final class CartonController extends AbstractController
     public function index(Request $request): Response
     {
         $user = $this->annuaire->getUser($request);
+        $filters = $request->query->all();
 //        $objects = $this->cartonRepository->findBy(['user' => $user, 'deleted_at' => null], ['numero' => 'asc']);
-        $objects = $this->cartonRepository->findByUserGroupedByRoom($user);
+        $objects = $this->cartonRepository->findByUserGroupedByRoom($user, $filters);
 
         $json = $this->serializer->serialize($objects, 'json', ['groups' => 'carton:read']);
 

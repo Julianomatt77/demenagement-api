@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(uriTemplate: '/api/rooms', name: 'get_all_rooms'),
+        new GetCollection(uriTemplate: '/api/rooms', paginationEnabled: false, name: 'get_all_rooms'),
         new Post(uriTemplate: '/api/rooms', denormalizationContext: ['groups' => ['room:write']], name: 'add_room'),
         new get(uriTemplate: '/api/rooms/{id}', denormalizationContext: ['groups' => ['room:read']], name: 'get_room'),
         new Patch(uriTemplate: '/api/rooms/{id}', denormalizationContext: ['groups' => ['room:write']], name: 'edit_room'),

@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: AdministratifRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(uriTemplate: '/api/administratif', name: 'get_all_administratif'),
+        new GetCollection(uriTemplate: '/api/administratif', paginationEnabled: false, name: 'get_all_administratif'),
         new Post(uriTemplate: '/api/administratif', denormalizationContext: ['groups' => ['administratif:write']], name: 'add_administratif'),
         new get(uriTemplate: '/api/administratif/{id}', denormalizationContext: ['groups' => ['administratif:read']], name: 'get_administratif'),
         new Patch(uriTemplate: '/api/administratif/{id}', denormalizationContext: ['groups' => ['administratif:write']], name: 'edit_administratif'),

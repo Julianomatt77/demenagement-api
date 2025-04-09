@@ -2,12 +2,16 @@
 
 namespace App\Entity;
 
+//use ApiPlatform\Doctrine\Odm\Filter\NumericFilter;
+//use ApiPlatform\Laravel\Eloquent\Filter\PartialSearchFilter;
+//use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Controller\CartonController;
 use App\Repository\CartonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,7 +22,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: CartonRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(uriTemplate: '/api/cartons', name: 'get_all_cartons'),
+        new GetCollection(
+            uriTemplate: '/api/cartons',
+            paginationEnabled: false,
+            description: 'Get the list of all boxes',
+            name: 'get_all_cartons',
+            parameters: [
+                new QueryParameter(key: 'room', schema: ['type' => 'integer'], description: 'Filter boxes by room id', required: false),
+                new QueryParameter(key: 'element', schema: ['type' => 'string'], description: 'Find the boxes in which an item is present', required: false),
+            ]
+        ),
         new Post(uriTemplate: '/api/cartons', denormalizationContext: ['groups' => ['carton:write']], name: 'add_carton'),
         new get(uriTemplate: '/api/cartons/{id}', denormalizationContext: ['groups' => ['carton:read']], name: 'get_carton'),
         new Patch(uriTemplate: '/api/cartons/{id}', denormalizationContext: ['groups' => ['carton:write']], name: 'edit_carton'),
