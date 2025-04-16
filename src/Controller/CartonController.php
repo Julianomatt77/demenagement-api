@@ -133,12 +133,6 @@ final class CartonController extends AbstractController
             unset($content['room']);
         }
 
-        if (isset($content['numero'])){
-            if ($this->dataService->isCartonNumberExisting($content['numero'])) {
-                return new JsonResponse(['error' => 'Ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
-            }
-        }
-
         $object = $this->cartonRepository->findOneBy(['id' => $object->getId(), 'user' => $user, 'deleted_at' => null]);
 
         if (!$object) {
@@ -147,6 +141,12 @@ final class CartonController extends AbstractController
 
         if ($object->getUser() !== $user) {
             return new JsonResponse(['error' => 'Utilisateur non autorisé'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        if (isset($content['numero']) && $content['numero'] != $object->getNumero()){
+            if ($this->dataService->isCartonNumberExisting($content['numero'])) {
+                return new JsonResponse(['error' => 'Ce numéro existe déjà'], Response::HTTP_BAD_REQUEST);
+            }
         }
 
         if ($content) {
