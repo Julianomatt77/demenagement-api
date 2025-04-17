@@ -35,8 +35,12 @@ class CartonRepository extends ServiceEntityRepository
             $qb->setParameter('element', '%'.$filters['element'].'%');
     }
 
-        $qb->orderBy('r.name', 'ASC')
-            ->addOrderBy('c.numero', 'ASC')
+//        $qb->orderBy('r.name', 'ASC')
+//            ->addOrderBy('c.numero', 'ASC')
+//            ->setParameter('user', $user);
+
+        $qb->orderBy('c.numero', 'ASC')
+//            ->addOrderBy('c.numero', 'ASC')
             ->setParameter('user', $user);
 
         return $qb->getQuery()->getResult();

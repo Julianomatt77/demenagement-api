@@ -40,7 +40,7 @@ final class RoomController extends AbstractController
     public function index(Request $request): Response
     {
         $user = $this->annuaire->getUser($request);
-        $objects = $this->roomRepository->findBy(['user' => $user, 'deleted_at' => null], ['id' => 'desc']);
+        $objects = $this->roomRepository->findBy(['user' => $user, 'deleted_at' => null], ['name' => 'asc']);
 
         $json = $this->serializer->serialize($objects, 'json', ['groups' => 'room:read']);
 
