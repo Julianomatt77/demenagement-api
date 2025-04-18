@@ -25,6 +25,7 @@ class CartonRepository extends ServiceEntityRepository
 
         if (isset($filters['room']) && $filters['room'] != '') {
             $qb->andWhere('r.id = :room');
+            $qb->andWhere('r.deleted_at IS NULL');
             $qb->setParameter('room', $filters['room']);
         }
 
@@ -32,11 +33,13 @@ class CartonRepository extends ServiceEntityRepository
             // Utiliser la relation "elements" qui existe déjà sur l'entité carton
             $qb->leftJoin('c.elements', 'e');
             $qb->andWhere('e.name LIKE :element');
+            $qb->andWhere('e.deleted_at IS NULL');
             $qb->setParameter('element', '%'.$filters['element'].'%');
         }
 
         if (isset($filters['box']) && $filters['box'] != '') {
             $qb->andWhere('c.numero = :box');
+            $qb->andWhere('c.deleted_at IS NULL');
             $qb->setParameter('box', $filters['box']);
         }
 
