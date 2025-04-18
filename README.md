@@ -41,4 +41,5 @@ symfony serve
 
 **You can use some parameters to filter the boxes** :
 - `room` : filter boxes data per room id 
+- `box` : filter by box number
 - `element` : filter boxes by only showing the ones containing the searched element.

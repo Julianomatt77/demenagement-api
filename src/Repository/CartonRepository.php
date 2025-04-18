@@ -33,7 +33,12 @@ class CartonRepository extends ServiceEntityRepository
             $qb->leftJoin('c.elements', 'e');
             $qb->andWhere('e.name LIKE :element');
             $qb->setParameter('element', '%'.$filters['element'].'%');
-    }
+        }
+
+        if (isset($filters['box']) && $filters['box'] != '') {
+            $qb->andWhere('c.numero = :box');
+            $qb->setParameter('box', $filters['box']);
+        }
 
 //        $qb->orderBy('r.name', 'ASC')
 //            ->addOrderBy('c.numero', 'ASC')

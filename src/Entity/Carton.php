@@ -29,6 +29,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: 'get_all_cartons',
             parameters: [
                 new QueryParameter(key: 'room', schema: ['type' => 'integer'], description: 'Filter boxes by room id', required: false),
+                new QueryParameter(key: 'box', schema: ['type' => 'integer'], description: 'Filter by box number', required: false),
                 new QueryParameter(key: 'element', schema: ['type' => 'string'], description: 'Find the boxes in which an item is present', required: false),
             ]
         ),
