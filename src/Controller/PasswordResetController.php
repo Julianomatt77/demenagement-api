@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use App\Service\AnnuaireService;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,11 +23,13 @@ class PasswordResetController extends AbstractController
 {
     private UserRepository $userRepository;
     private UserPasswordHasherInterface $userPasswordHasher;
+    private AnnuaireService $annuaire;
 
-    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, AnnuaireService $annuaire)
     {
         $this->userRepository = $userRepository;
         $this->userPasswordHasher = $userPasswordHasher;
+        $this->annuaire = $annuaire;
     }
 
     /**
@@ -67,10 +70,9 @@ class PasswordResetController extends AbstractController
     #[Route('/reset/{token}', name: 'password_reset', methods: ['PATCH'])]
     public function resetPassword(Request $request, string $token, EntityManagerInterface $em): Response
     {
-        $user = $this->userRepository->findOneBy(['token' => $token]);
-
-        if (!$user || $user->getTokenExpiryDate() < new \DateTimeImmutable()) {
-            return $this->json(['message' => 'Token invalide ou expiré'], Response::HTTP_BAD_REQUEST);
+        $user = $this->annuaire->getUser($request);
+        if (!$user){
+            return $this->json(['message' => 'Veuillez vous connecter pour changer de mot de passe'], Response::HTTP_UNAUTHORIZED);
         }
 
         $data = json_decode($request->getContent(), true);
@@ -88,4 +90,30 @@ class PasswordResetController extends AbstractController
 
         return $this->json(['message' => 'Mot de passe réinitialisé avec succès']);
     }
+
+    #[Route('/update', name: 'password_update', methods: ['PATCH'])]
+    public function updatePassword(Request $request, EntityManagerInterface $em): Response
+    {
+        $user = $this->annuaire->getUser($request);
+
+        if (!$user){
+            return $this->json(['message' => 'Veuillez vous connecter pour changer de mot de passe'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        $newPassword   = $data["password"];
+        if (!$newPassword) {
+            return $this->json(['message' => 'Mot de passe requis'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $user->setPassword($this->userPasswordHasher->hashPassword($user, $newPassword));
+        $em->persist($user);
+        $em->flush();
+
+        return new JsonResponse([
+            "status"  => true,
+            "message" => "Mot de passe mis à jour avec succès"
+        ], Response::HTTP_CREATED);
+    }
+
 }

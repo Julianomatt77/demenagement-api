@@ -62,6 +62,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 description: 'Reset the user password with a token.'),
             denormalizationContext: ['groups' => ['password:write']],
             name: 'password_reset'),
+        new Patch(
+            uriTemplate: '/api/password/update',
+            controller: PasswordResetController::class,
+            openapi: new Operation(
+                summary: 'Update the user password',
+                description: 'Update the user password.'),
+            denormalizationContext: ['groups' => ['password:write']],
+            name: 'password_update'),
     ],
     formats: ["json"],
 )]
