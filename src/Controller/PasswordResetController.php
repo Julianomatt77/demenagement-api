@@ -71,7 +71,8 @@ class PasswordResetController extends AbstractController
     #[Route('/reset/{token}', name: 'password_reset', methods: ['PATCH'])]
     public function resetPassword(Request $request, string $token, EntityManagerInterface $em): Response
     {
-        $user = $this->annuaire->getUser($request);
+        $user = $this->userRepository->findOneBy(['token' => $token]);
+//        $user = $this->annuaire->getUser($request);
         if (!$user){
             return $this->json(['message' => 'Veuillez vous connecter pour changer de mot de passe'], Response::HTTP_UNAUTHORIZED);
         }
