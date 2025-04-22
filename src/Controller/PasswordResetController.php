@@ -55,7 +55,7 @@ class PasswordResetController extends AbstractController
 
         // Envoyer un email à l'utilisateur avec un lien de réinitialisation
 //        $resetLink = $this->generateUrl('password_reset', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
-        $resetLink = $data['website'] . '?token=' . $token;
+        $resetLink = $data['website'] . '/reset-pwd?token=' . $token;
         $to = $user->getEmail();
         $subject = 'Réinitialisation de votre mot de passe';
         $message = "Cliquez sur ce lien pour réinitialiser votre mot de passe : <a href=\"$resetLink\">$resetLink</a>";
