@@ -130,6 +130,20 @@ class UserController extends AbstractController
         if (!$data["email"]) {
             return new JsonResponse(['message' => 'Email requis'], Response::HTTP_BAD_REQUEST);
         }
+        $checkEmail = $this->userRepository->findOneBy(['email' => $data["email"]]);
+        if ($checkEmail) {
+            if ($checkEmail->getDeletedAt()) {
+                return new JsonResponse([
+                    "status"  => false,
+                    "message" => "Ce compte a été supprimé, vous devez en créer un nouveau ou nous contacter!"
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            return new JsonResponse([
+                "status"  => false,
+                "message" => "Cet email existe déjà, vous devez en choisir un autre !"
+            ], Response::HTTP_FORBIDDEN);
+        }
         $user->setEmail($data["email"]);
 
         $this->em->persist($user);
