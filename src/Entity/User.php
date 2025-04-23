@@ -46,6 +46,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 description: 'Delete an user account.'),
             denormalizationContext: ['groups' => ['user:write']],
             name: 'app_user_delete'),
+        new Patch(
+            uriTemplate: '/api/user-email-update',
+            controller: UserController::class,
+            openapi: new Operation(
+                summary: 'Update your email address.',
+                description: 'Update your email address.'),
+            denormalizationContext: ['groups' => ['user:write']],
+            name: 'user_email_update'),
         new Post(
             uriTemplate: '/api/password/forgot',
             controller: PasswordResetController::class,

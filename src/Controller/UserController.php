@@ -116,4 +116,29 @@ class UserController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
+    #[Route(
+    path: '/api/user-email-update', name: 'user_email_update', defaults: ['_api_resource_class' => User::class,], methods: ['PATCH'],
+    )]
+    public function updateEmail( Request $request): Response
+    {
+        $user = $this->annuaire->getUser($request);
+        if (!$user){
+            return new JsonResponse(['error' => 'Veuillez vous connecter pour changer de mot de passe'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        if (!$data["email"]) {
+            return new JsonResponse(['message' => 'Email requis'], Response::HTTP_BAD_REQUEST);
+        }
+        $user->setEmail($data["email"]);
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return new JsonResponse([
+            "status" => true,
+            "message" => "Votre email a été modifié avec succès !"
+        ], Response::HTTP_CREATED);
+    }
+
 }
